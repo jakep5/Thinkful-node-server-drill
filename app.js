@@ -22,6 +22,14 @@ app.get('/books', (req, res) => {
     let results = books
         .filter(book =>
             book.title.toLowerCase().includes(search.toLowerCase())); //both search term and book list put into lower case
+
+    if(sort) {
+        results
+            .sort((a, b) => {
+                return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0
+            });
+    }
+     
     res 
         .json(results);
 });
