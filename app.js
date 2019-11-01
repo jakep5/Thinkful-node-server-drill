@@ -1,0 +1,31 @@
+const express = require('express');
+const morgan = require('morgan');
+
+const app = express();
+
+
+app.use(morgan('common'));
+
+const books = require('./books-data.js')
+
+app.get('/books', (req, res) => {
+
+    const { search = "", sort } = req.query;
+
+    if (sort) {
+        if(!['title', 'rank'].includes(sort)) {
+            return res
+                .status(400)
+                .send('Sort must be one of title or rank');
+        }
+    }
+    let results = books
+        .filter(book =>
+            book.title.toLowerCase().includes(search.toLowerCase())); //both search term and book list put into lower case
+    res 
+        .json(results);
+});
+
+app.listen(8000, () => {
+    console.log('Server started on PORT 8000');
+})
